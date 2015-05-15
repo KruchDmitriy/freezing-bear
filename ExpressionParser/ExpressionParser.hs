@@ -1,77 +1,14 @@
+module ExpressionParser (
+    Function,
+    create_func,
+    evaluate_func
+) where
+
 import Data.Char
 import Data.Maybe
 
-type Prior = Int
-data UnaryOperator  = Sin Prior | Cos Prior | Tg Prior | Lg Prior | Exp Prior
-    deriving (Show, Eq)
-data BinaryOperator = Plus Prior | Minus Prior | Mult Prior | Div Prior | Pow Prior
-    deriving (Show, Eq)
-
-take_prior_un :: UnaryOperator -> Int
-take_prior_un (Sin prior) = prior
-take_prior_un (Cos prior) = prior
-take_prior_un (Tg  prior) = prior
-take_prior_un (Lg  prior) = prior
-take_prior_un (Exp prior) = prior
-
-instance Ord UnaryOperator where
-    x <= y = (take_prior_un x) <= (take_prior_un y)
-
-take_prior_bin :: BinaryOperator -> Int
-take_prior_bin (Plus  prior) = prior
-take_prior_bin (Minus prior) = prior
-take_prior_bin (Mult  prior) = prior
-take_prior_bin (Div   prior) = prior
-take_prior_bin (Pow   prior) = prior
-
-instance Ord BinaryOperator where
-    x <= y = (take_prior_bin x) <= (take_prior_bin y)
-
-create_un_op :: String -> Maybe UnaryOperator
-create_un_op str
-    | (str == "sin") = Just (Sin 3)
-    | (str == "cos") = Just (Cos 3)
-    | (str == "tg")  = Just (Tg  3)
-    | (str == "lg")  = Just (Lg  3)
-    | (str == "exp") = Just (Exp 3)
-    | otherwise      = Nothing
-
-create_bin_op :: Char -> Maybe BinaryOperator
-create_bin_op c
-    | (c == '+') = Just (Plus  1)
-    | (c == '-') = Just (Minus 1)
-    | (c == '*') = Just (Mult  2)
-    | (c == '/') = Just (Div   2)
-    | (c == '^') = Just (Pow   3)
-    | otherwise  = Nothing
-
-inc_prior_un :: UnaryOperator -> Int -> UnaryOperator
-inc_prior_un (Sin prior) delta = Sin (prior + delta)
-inc_prior_un (Cos prior) delta = Cos (prior + delta)
-inc_prior_un (Tg  prior) delta = Tg  (prior + delta)
-inc_prior_un (Lg  prior) delta = Lg  (prior + delta)
-inc_prior_un (Exp prior) delta = Exp (prior + delta)
-
-inc_prior_bin :: BinaryOperator -> Int -> BinaryOperator
-inc_prior_bin (Plus  prior) delta = Plus  (prior + delta)
-inc_prior_bin (Minus prior) delta = Minus (prior + delta)
-inc_prior_bin (Mult  prior) delta = Mult  (prior + delta)
-inc_prior_bin (Div   prior) delta = Div   (prior + delta)
-inc_prior_bin (Pow   prior) delta = Pow   (prior + delta)
-
-eval_un :: UnaryOperator -> Double -> Double
-eval_un (Sin _) value = sin(value)
-eval_un (Cos _) value = cos(value)
-eval_un (Tg  _) value = tan(value)
-eval_un (Lg  _) value = log(value)
-eval_un (Exp _) value = exp(value)
-
-eval_bin :: BinaryOperator -> Double -> Double -> Double
-eval_bin (Plus  _) val1 val2 = val1 + val2
-eval_bin (Minus _) val1 val2 = val1 - val2
-eval_bin (Mult  _) val1 val2 = val1 * val2
-eval_bin (Div   _) val1 val2 = val1 / val2
-eval_bin (Pow   _) val1 val2 = val1 ** val2
+import Operator.UnaryOperator
+import Operator.BinaryOperator
 
 data Token = UnOp UnaryOperator | BinOp BinaryOperator |
              LeftBr | RightBr |
@@ -122,10 +59,10 @@ check_prior (t:ts) prior =
 data Term = BiTerm BinaryOperator Term Term |
             UnTerm UnaryOperator  Term      |
             VarX | VarNumber Double |
-            Null
+            Error
             deriving (Show, Eq)
 
-type LexTree = Term
+type Function = Term
 
 is_bin_op :: Token -> Bool
 is_bin_op (BinOp b) = True
@@ -162,12 +99,6 @@ find_weak_bin_op tokens =
         where
             token = minimum' (filter is_bin_op tokens)
 
-from_token_to_bin :: Token -> BinaryOperator
-from_token_to_bin (BinOp b) = b
-
-from_token_to_un :: Token -> UnaryOperator
-from_token_to_un (UnOp u) = u
-
 find_weak_op :: [Token] -> Either UnOp_n_Arg BinOp_n_Arg
 find_weak_op tokens =
     if (weak_un /= Nothing && weak_bin /= Nothing) then
@@ -181,21 +112,25 @@ find_weak_op tokens =
         weak_bin = find_weak_bin_op tokens
         fst' = \ (x1, _, _) -> x1
 
--- If we have at least one Null in LexTree, LexTree is incorrect
-terminator :: [Token] -> LexTree
+-- If we have at least one Error in Function, Function is incorrect
+terminator :: [Token] -> Function
+terminator [] = Error
 terminator [X]        = VarX
 terminator [Number a] = VarNumber a
 terminator tokens =
     case weak_op_ht of
         Left  (Just (UnOp u, tok))          -> UnTerm u (terminator tok)
         Right (Just (BinOp b, tok1, tok2))  -> BiTerm b (terminator tok1) (terminator tok2)
-        Left Nothing                        -> Null
+        Left Nothing                        -> Error
     where
         weak_op_ht = find_weak_op tokens
 
 
-evaluator :: LexTree -> Double -> Double
-evaluator VarX value                        = value
-evaluator (VarNumber number) _              = number
-evaluator (UnTerm un_op term) value         = eval_un  un_op (evaluator term value)
-evaluator (BiTerm bi_op term1 term2) value  = eval_bin bi_op (evaluator term1 value) (evaluator term2 value)
+evaluate_func :: Function -> Double -> Double
+evaluate_func VarX value                        = value
+evaluate_func (VarNumber number) _              = number
+evaluate_func (UnTerm un_op term) value         = eval_un  un_op (evaluate_func term value)
+evaluate_func (BiTerm bi_op term1 term2) value  = eval_bin bi_op (evaluate_func term1 value) (evaluate_func term2 value)
+
+create_func :: String -> Function
+create_func str = terminator $ check_prior (tokenizer str) 0
