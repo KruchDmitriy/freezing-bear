@@ -1,4 +1,4 @@
-module ExpressionParser (
+module ExpressionParser.ExpressionParser (
     Function,
     create_func,
     evaluate_func
@@ -7,8 +7,8 @@ module ExpressionParser (
 import Data.Char
 import Data.Maybe
 
-import Operator.UnaryOperator
-import Operator.BinaryOperator
+import ExpressionParser.Operator.UnaryOperator
+import ExpressionParser.Operator.BinaryOperator
 
 data Token = UnOp UnaryOperator | BinOp BinaryOperator |
              LeftBr | RightBr |

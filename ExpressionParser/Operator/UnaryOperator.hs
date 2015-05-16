@@ -1,4 +1,4 @@
-module Operator.UnaryOperator
+module ExpressionParser.Operator.UnaryOperator
 (
     UnaryOperator,
     take_prior_un,
