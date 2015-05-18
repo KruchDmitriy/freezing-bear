@@ -1,4 +1,4 @@
-module Operator.BinaryOperator
+module ExpressionParser.Operator.BinaryOperator
 (
     BinaryOperator,
     take_prior_bin,
