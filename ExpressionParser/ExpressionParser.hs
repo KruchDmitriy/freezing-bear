@@ -1,9 +1,7 @@
 module ExpressionParser.ExpressionParser (
     Function,
     create_func,
-    evaluate_func,
-    sum',
-    mult'
+    evaluate_func
 ) where
 
 import Data.Char
@@ -75,13 +73,21 @@ is_un_op :: Token -> Bool
 is_un_op (UnOp b) = True
 is_un_op _ = False
 
-sum' :: [Function] -> Function
-sum' [] = Error
-sum' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '+') x y) (head funcs) funcs
+--sum' :: [Function] -> Function
+--sum' [] = Error
+--sum' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '+') x y) (head funcs) funcs
 
-mult' :: [Function] -> Function
-mult' [] = Error
-mult' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '*') x y) (head funcs) funcs
+--mult' :: [Function] -> Function
+--mult' [] = Error
+--mult' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '*') x y) (head funcs) funcs
+
+instance Num Term where
+    x + y = BiTerm (fromJust $ create_bin_op '+') x y
+    x - y = BiTerm (fromJust $ create_bin_op '-') x y
+    x * y = BiTerm (fromJust $ create_bin_op '*') x y
+
+instance Fractional Term where
+    x / y = BiTerm (fromJust $ create_bin_op '/') x y
 
 type UnOp_n_Arg  = Maybe (Token, [Token])
 type BinOp_n_Arg = Maybe (Token, [Token], [Token])
