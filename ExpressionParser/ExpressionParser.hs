@@ -73,14 +73,6 @@ is_un_op :: Token -> Bool
 is_un_op (UnOp b) = True
 is_un_op _ = False
 
---sum' :: [Function] -> Function
---sum' [] = Error
---sum' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '+') x y) (head funcs) funcs
-
---mult' :: [Function] -> Function
---mult' [] = Error
---mult' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '*') x y) (head funcs) funcs
-
 instance Num Term where
     x + y = BiTerm (fromJust $ create_bin_op '+') x y
     x - y = BiTerm (fromJust $ create_bin_op '-') x y
