@@ -1,11 +1,14 @@
 module ExpressionParser.ExpressionParser (
     Function,
     create_func,
-    evaluate_func
+    evaluate_func,
+    sum',
+    mult'
 ) where
 
 import Data.Char
 import Data.Maybe
+import Data.List
 
 import ExpressionParser.Operator.UnaryOperator
 import ExpressionParser.Operator.BinaryOperator
@@ -71,6 +74,14 @@ is_bin_op _ = False
 is_un_op :: Token -> Bool
 is_un_op (UnOp b) = True
 is_un_op _ = False
+
+sum' :: [Function] -> Function
+sum' [] = Error
+sum' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '+') x y) (head funcs) funcs
+
+mult' :: [Function] -> Function
+mult' [] = Error
+mult' funcs = foldl' (\ x y -> BiTerm (fromJust $ create_bin_op '*') x y) (head funcs) funcs
 
 type UnOp_n_Arg  = Maybe (Token, [Token])
 type BinOp_n_Arg = Maybe (Token, [Token], [Token])
