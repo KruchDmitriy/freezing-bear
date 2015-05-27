@@ -12,6 +12,7 @@ To compile the program run ```ghc -o main ./Main.hs```.
 Main.hs is the entry point to the program. Start it to get the functionality.
 
 List of supported masthematical functions:
+
 1. sin(x)
 1. cos(x)
 1. tg(x)
@@ -19,6 +20,7 @@ List of supported masthematical functions:
 1. lg(x) - log with base 10
 Every function `f(x)` can be written as `f x` too.
 List of binary operators:
+
 1. x + y
 1. x - y
 1. x * y
