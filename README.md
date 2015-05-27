@@ -68,7 +68,8 @@ This module separates in two submodules: `Integral` and `Interpolation`.
 **Integral** submodule allows to compute an integral of functions in range [a, b] with a fixed step by 2 methods: trapezy and Simpson's. The signatures of this functions are
 ```haskell
 trap_integral_step :: Function -> Double -> Double -> Step -> Area
-``` and
+```
+and
 ```haskell
 simpson_integral :: Function -> Double -> Double -> Step -> Area
 ```.
@@ -76,7 +77,8 @@ simpson_integral :: Function -> Double -> Double -> Step -> Area
 **Interpolation** submodule contains 
 ```haskell
 interpolate_lagrange :: [Point] -> Function
-``` method that implements Lagrange polynom interpolation by set of points `(x_i, y_i = f(x_i))`.
+```
+method that implements Lagrange polynom interpolation by set of points `(x_i, y_i = f(x_i))`.
 
 ### Plot
 The module intends for plotting functions by own algorithm, based on `OpenGL` and `GLUT` library.
@@ -95,7 +97,8 @@ data DescriptorFunc = DescriptorFunc {
 To draw some function you should put certain `DescriptorFunc` instance to the queue via
 ```haskell
 add_func :: QueueOfFunc -> DescriptorFunc -> QueueOfFunc
-``` and then send the queue to
+```
+and then send the queue to
 ```haskell
 draw_window :: QueueOfFunc -> IO ()
 ```.
