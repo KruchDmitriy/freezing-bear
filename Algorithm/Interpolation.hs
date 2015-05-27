@@ -1,3 +1,7 @@
+module Algorithm.Interpolation (
+    interpolate_lagrange
+) where
+
 import ExpressionParser.Operator.BinaryOperator
 import ExpressionParser.ExpressionParser
 

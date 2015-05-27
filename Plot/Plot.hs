@@ -1,3 +1,7 @@
+module Plot.Plot (
+    drawl
+    ) where
+
 import Graphics.UI.GLUT
 import Graphics.Rendering.OpenGL
 import System.Exit ( exitWith, ExitCode(ExitSuccess) )
@@ -73,7 +77,7 @@ display queue_func = do
     ortho2D'  a_s b_s c_s d_s
     draw_grid a_s b_s c_s d_s
     draw_axes a_s b_s c_s d_s windowPixelSize
-    mapM_ (\ x -> draw_prim LineStrip (get_vertexes x) (Main.color x)) queue_func
+    mapM_ (\ x -> draw_prim LineStrip (get_vertexes x) (Plot.Plot.color x)) queue_func
     flush
     where
             a_s = a - sx
