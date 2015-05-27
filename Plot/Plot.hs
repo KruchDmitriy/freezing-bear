@@ -132,6 +132,6 @@ drawl = do
     let descr1 = DescriptorFunc (create_func "x^(0.5)") (-3) 10 0.01 (Color4 0 0 1 1)
         descr2 = DescriptorFunc (create_func "sin(x)") 0 10 0.01 (Color4 0 1 0 1)
         descr3 = DescriptorFunc (create_func "x - sin(x)") 0 10 0.01 (Color4 1 0 0 1)
-        descr4 = DescriptorFunc (create_func "((3/10)*x^3) + ((13/6)*x^2) - ((62/15)*x) + 1") 0 5 0.01 (Color4 1 0 1 1)
+        descr4 = DescriptorFunc (create_func "3/10*x^3 - 13/6*x^2 + 62/15*x + 1") 0 5 0.01 (Color4 1 0 1 1)
         queue = add_func (add_func (add_func (add_func [] descr1) descr2) descr3) descr4 in draw_window queue
 

@@ -28,11 +28,11 @@ instance Ord UnaryOperator where
 
 create_un_op :: String -> Maybe UnaryOperator
 create_un_op str
-    | (str == "sin") = Just (Sin 3)
-    | (str == "cos") = Just (Cos 3)
-    | (str == "tg")  = Just (Tg  3)
-    | (str == "lg")  = Just (Lg  3)
-    | (str == "exp") = Just (Exp 3)
+    | (str == "sin") = Just (Sin 5)
+    | (str == "cos") = Just (Cos 5)
+    | (str == "tg")  = Just (Tg  5)
+    | (str == "lg")  = Just (Lg  5)
+    | (str == "exp") = Just (Exp 5)
     | otherwise      = Nothing
 
 inc_prior_un :: UnaryOperator -> Int -> UnaryOperator

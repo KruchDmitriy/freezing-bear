@@ -59,8 +59,8 @@ check_prior :: [Token] -> Int -> [Token]
 check_prior [] _ = []
 check_prior (t:ts) prior =
     case t of
-        LeftBr    -> check_prior ts (prior + 3)
-        RightBr   -> check_prior ts (prior - 3)
+        LeftBr    -> check_prior ts (prior + 5)
+        RightBr   -> check_prior ts (prior - 5)
         UnOp un   -> (UnOp  (inc_prior_un un prior)) : (check_prior ts prior)
         BinOp bin -> (BinOp (inc_prior_bin bin prior)) : (check_prior ts prior)
         _         -> t : (check_prior ts prior)
