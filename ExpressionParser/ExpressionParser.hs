@@ -21,30 +21,38 @@ instance Ord Token where
     (BinOp b1) <= (BinOp b2) = b1 <= b2
     (UnOp u1) <= (UnOp u2) = u1 <= u2
 
-takeWhile_n_tail :: [a] -> (a -> Bool) -> ([a], [a])
-takeWhile_n_tail [] _ = ([], [])
-takeWhile_n_tail (x:xs) p
+takeWhile_r_tail :: [a] -> (a -> Bool) -> ([a], [a])
+takeWhile_r_tail [] _ = ([], [])
+takeWhile_r_tail (x:xs) p
     | p x         = (x : fst xn, snd xn)
     | otherwise   = ([], (x:xs))
-    where xn = takeWhile_n_tail xs p
+    where xn = takeWhile_r_tail xs p
+
+takeWhile_l_tail :: [a] -> (a -> Bool) -> ([a], [a])
+takeWhile_l_tail [] _ = ([], [])
+takeWhile_l_tail (x:xs) p
+    | p x         = (x : fst xn, snd xn)
+    | otherwise   = ([x], xs)
+    where xn = takeWhile_l_tail xs p
+
 
 tokenizer :: String -> [Token]
 tokenizer "" = []
 tokenizer (c:cs)
     | c == ' '          = tokenizer cs
     | isDigit c         =
-        Number (read (fst num_n_tail) :: Double) : (tokenizer $ snd num_n_tail)
+        Number (read (fst num_tail) :: Double) : (tokenizer $ snd num_tail)
     | isLetter c && (c /= 'x') =
-        if (un_op /= Nothing) then UnOp (fromJust un_op) : (tokenizer $ snd func_n_tail)
+        if (un_op /= Nothing) then UnOp (fromJust un_op) : (tokenizer $ snd func_tail)
         else []
     | bin_op /= Nothing = BinOp (fromJust bin_op) : tokenizer cs
     | c == 'x'          = X : tokenizer cs
     | c == '('          = LeftBr : tokenizer cs
     | c == ')'          = RightBr : tokenizer cs
     | otherwise         = []
-    where num_n_tail  = takeWhile_n_tail (c:cs) (\x -> isDigit x || x == '.')
-          func_n_tail = takeWhile_n_tail (c:cs) isLetter
-          un_op = create_un_op (fst func_n_tail)
+    where num_tail  = takeWhile_r_tail (c:cs) (\x -> isDigit x || x == '.')
+          func_tail = takeWhile_r_tail (c:cs) isLetter
+          un_op = create_un_op (fst func_tail)
           bin_op = create_bin_op c
 
 check_prior :: [Token] -> Int -> [Token]
@@ -92,18 +100,22 @@ find_weak_un_op :: [Token] -> UnOp_n_Arg
 find_weak_un_op []     = Nothing
 find_weak_un_op tokens =
     case token of
-        Just tok -> Just (tok, tail $ snd token_n_tail)
-            where token_n_tail = takeWhile_n_tail tokens (\x -> x /= tok)
+        Just tok -> Just (tok, tail $ snd token_tail)
+            where token_tail = takeWhile_r_tail tokens (\x -> x /= tok)
         _        -> Nothing
         where
             token = minimum' (filter is_un_op tokens)
+
+reverse_find :: [Token] -> Token -> ([Token], [Token])
+reverse_find tokens tok = (\ (x, y) -> (reverse y, reverse x)) token_tail
+    where token_tail = takeWhile_l_tail (reverse tokens) (/= tok)
 
 find_weak_bin_op :: [Token] -> BinOp_n_Arg
 find_weak_bin_op []     = Nothing
 find_weak_bin_op tokens =
     case token of
-        Just tok -> Just (tok, fst token_n_tail, tail $ snd token_n_tail)
-            where token_n_tail = takeWhile_n_tail tokens (\x -> x /= tok)
+        Just tok -> Just (tok, fst token_tail, tail $ snd token_tail)
+            where token_tail = reverse_find tokens tok
         _        -> Nothing
         where
             token = minimum' (filter is_bin_op tokens)
