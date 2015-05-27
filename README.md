@@ -20,6 +20,7 @@ List of supported masthematical functions:
 1. lg(x) - log with base 10
 
 Every function `f(x)` can be written as `f x` too.
+
 List of binary operators:
 
 1. x + y
