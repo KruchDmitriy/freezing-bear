@@ -1,6 +1,7 @@
 module Algorithm.Integral (
-    trap_integral,
-    trap_integral_step
+    trap_integral_count,
+    trap_integral_step,
+    simpson_integral
     ) where
 
 import Data.List
@@ -10,19 +11,19 @@ import ExpressionParser.ExpressionParser
 type Step = Double
 type Square = Double
 
-trap_integral_step :: Function -> Double -> Double -> Int -> Square
-trap_integral_step _ a b _ | a >= b = 0.0
-trap_integral_step _ _ _ 0 = 0.0
-trap_integral_step func a b n =
-    s + trap_integral_step func (a + h) b (n - 1)
+trap_integral_count :: Function -> Double -> Double -> Int -> Square
+trap_integral_count _ a b _ | a >= b = 0.0
+trap_integral_count _ _ _ 0 = 0.0
+trap_integral_count func a b n =
+    s + trap_integral_count func (a + h) b (n - 1)
     where
         s = ((f' + f) / 2) * h
         f' = evaluate_func func a
         f = evaluate_func func (a + h)
         h = (b - a) / (fromIntegral n)
 
-trap_integral :: Function -> Double -> Double -> Step -> Square
-trap_integral f a b h =
+trap_integral_step :: Function -> Double -> Double -> Step -> Square
+trap_integral_step f a b h =
     sum * h' + (f' a + f' b) * h' / 2
     where
         sum = foldl' (+) 0 fi

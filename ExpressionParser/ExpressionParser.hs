@@ -59,8 +59,8 @@ check_prior :: [Token] -> Int -> [Token]
 check_prior [] _ = []
 check_prior (t:ts) prior =
     case t of
-        LeftBr    -> check_prior ts (prior + 3)
-        RightBr   -> check_prior ts (prior - 3)
+        LeftBr    -> check_prior ts (prior + 5)
+        RightBr   -> check_prior ts (prior - 5)
         UnOp un   -> (UnOp  (inc_prior_un un prior)) : (check_prior ts prior)
         BinOp bin -> (BinOp (inc_prior_bin bin prior)) : (check_prior ts prior)
         _         -> t : (check_prior ts prior)
@@ -85,9 +85,11 @@ instance Num Term where
     x + y = BiTerm (fromJust $ create_bin_op '+') x y
     x - y = BiTerm (fromJust $ create_bin_op '-') x y
     x * y = BiTerm (fromJust $ create_bin_op '*') x y
+    fromInteger i = create_func $ show i
 
 instance Fractional Term where
     x / y = BiTerm (fromJust $ create_bin_op '/') x y
+    fromRational r = create_func $ show r
 
 type UnOp_n_Arg  = Maybe (Token, [Token])
 type BinOp_n_Arg = Maybe (Token, [Token], [Token])

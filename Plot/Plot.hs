@@ -1,3 +1,10 @@
+module Plot.Plot (
+    draw_sample,
+    add_func,
+    DescriptorFunc(DescriptorFunc),
+    draw_window
+    ) where
+
 import Graphics.UI.GLUT
 import Graphics.Rendering.OpenGL
 import System.Exit ( exitWith, ExitCode(ExitSuccess) )
@@ -73,7 +80,7 @@ display queue_func = do
     ortho2D'  a_s b_s c_s d_s
     draw_grid a_s b_s c_s d_s
     draw_axes a_s b_s c_s d_s windowPixelSize
-    mapM_ (\ x -> draw_prim LineStrip (get_vertexes x) (Main.color x)) queue_func
+    mapM_ (\ x -> draw_prim LineStrip (get_vertexes x) (Plot.Plot.color x)) queue_func
     flush
     where
             a_s = a - sx
@@ -127,11 +134,11 @@ draw_axes a b c d (Size w h) = do
             dx = (b - a) / (fromIntegral w) * 5
             dy = (d - c) / (fromIntegral h) * 5
 
-drawl :: IO ()
-drawl = do
+draw_sample :: IO ()
+draw_sample = do
     let descr1 = DescriptorFunc (create_func "x^(0.5)") (-3) 10 0.01 (Color4 0 0 1 1)
         descr2 = DescriptorFunc (create_func "sin(x)") 0 10 0.01 (Color4 0 1 0 1)
         descr3 = DescriptorFunc (create_func "x - sin(x)") 0 10 0.01 (Color4 1 0 0 1)
-        descr4 = DescriptorFunc (create_func "((3/10)*x^3) + ((13/6)*x^2) - ((62/15)*x) + 1") 0 5 0.01 (Color4 1 0 1 1)
+        descr4 = DescriptorFunc (create_func "3/10*x^3 - 13/6*x^2 + 62/15*x + 1") 0 5 0.01 (Color4 1 0 1 1)
         queue = add_func (add_func (add_func (add_func [] descr1) descr2) descr3) descr4 in draw_window queue
 

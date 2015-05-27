@@ -29,10 +29,10 @@ instance Ord BinaryOperator where
 create_bin_op :: Char -> Maybe BinaryOperator
 create_bin_op c
     | (c == '+') = Just (Plus  1)
-    | (c == '-') = Just (Minus 1)
-    | (c == '*') = Just (Mult  2)
-    | (c == '/') = Just (Div   2)
-    | (c == '^') = Just (Pow   3)
+    | (c == '-') = Just (Minus 2)
+    | (c == '*') = Just (Mult  3)
+    | (c == '/') = Just (Div   4)
+    | (c == '^') = Just (Pow   5)
     | otherwise  = Nothing
 
 inc_prior_bin :: BinaryOperator -> Int -> BinaryOperator

@@ -1,3 +1,8 @@
+module Algorithm.Interpolation (
+    interpolate_lagrange,
+    Point
+) where
+
 import ExpressionParser.Operator.BinaryOperator
 import ExpressionParser.ExpressionParser
 
@@ -28,14 +33,20 @@ product_diffs_nom :: [Double] -> Function
 product_diffs_nom points = foldl' (*) (create_func "1") (map get_diff_nom points)
 
 product_diffs_denom :: Double -> [Double] -> Double
-product_diffs_denom xi points = foldl' (*) 1.0 (map (\ ps -> get_diff_denom ps xi) points)
+product_diffs_denom xi points = foldl' (*) 1.0 (map (\ ps -> get_diff_denom xi ps) points)
+
+create_denoms :: [[Double]] -> [Double] -> [Function]
+create_denoms pss xs =
+    map (create_func . (\ x -> if x > 0 then show x else "0" ++ (show x))) zipped
+    where
+        zipped = zipWith (\ x y -> product_diffs_denom y x) pss xs
 
 interpolate_lagrange :: [Point] -> Function
 interpolate_lagrange [] = create_func "0"
 interpolate_lagrange points = sum s
     where
         noms = map product_diffs_nom tr_points
-        denoms = map (create_func . show) $ zipWith (\ x y -> product_diffs_denom y x) tr_points fst_s
+        denoms = create_denoms tr_points fst_s
         tr_points = tr_list_points fst_s 0 (length fst_s)
         fst_s = map fst points
         snd_s = map (create_func . show . snd) points
