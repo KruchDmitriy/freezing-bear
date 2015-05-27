@@ -11,7 +11,7 @@ import Data.List
 type Point = (Double, Double)
 
 get_diff_nom :: Double -> Function
-get_diff_nom xi = create_func $ "(x - " ++ (show xi) ++ ")"
+get_diff_nom xi = create_func $ "(x - " ++ (change_negative xi) ++ ")"
 
 get_diff_denom :: Double -> Double -> Double
 get_diff_denom xi x = xi - x
@@ -37,9 +37,13 @@ product_diffs_denom xi points = foldl' (*) 1.0 (map (\ ps -> get_diff_denom xi p
 
 create_denoms :: [[Double]] -> [Double] -> [Function]
 create_denoms pss xs =
-    map (create_func . (\ x -> if x > 0 then show x else "0" ++ (show x))) zipped
+    map (create_func . change_negative) zipped
     where
         zipped = zipWith (\ x y -> product_diffs_denom y x) pss xs
+
+change_negative :: Double -> String
+change_negative = 
+    (\ x -> if x > 0 then show x else "0" ++ (show x))
 
 interpolate_lagrange :: [Point] -> Function
 interpolate_lagrange [] = create_func "0"
@@ -49,5 +53,5 @@ interpolate_lagrange points = sum s
         denoms = create_denoms tr_points fst_s
         tr_points = tr_list_points fst_s 0 (length fst_s)
         fst_s = map fst points
-        snd_s = map (create_func . show . snd) points
+        snd_s = map (create_func . change_negative . snd) points
         s = zipWith3 (\ x y z -> x / y * z) noms denoms snd_s
