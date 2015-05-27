@@ -42,4 +42,5 @@ Enter a, b range and the step by whitespace:
 ```
 
 The result of this example is shown below:
+
 ![Result plot](/Results/xpower(2)_1_5_4.png "Result plot")
