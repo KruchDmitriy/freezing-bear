@@ -55,10 +55,11 @@ The main modules of the program are `Algorithm`, `ExpressionParser`, and `Plot`.
 Contains algorithms to transform list of characters (string representation of the function) to the data structure that is useful to compute the expression. The data structure namely `Function` is a recursive tree, each node of it is an operator, a value or a variable. Main functions of this module are
 ```haskell
 create_func :: String -> Function
-``` and
+```
+and
 ```haskell
 evaluate_func :: Function -> Double -> Double
-```.
+```
 
 Another approach to solve the problem of parsing the string representation of functions is to use built-in Haskell interpretator (`Language.Haskell.Interpreter` module), but it seems too hard to understand how `MonadInterpreter` works, but attemptions was made :) ([First parser](https://github.com/KruchDmitriy/freezing-bear/blob/first_blood/parse.hs))
 
@@ -72,7 +73,7 @@ trap_integral_step :: Function -> Double -> Double -> Step -> Area
 and
 ```haskell
 simpson_integral :: Function -> Double -> Double -> Step -> Area
-```.
+```
 
 **Interpolation** submodule contains 
 ```haskell
@@ -101,4 +102,4 @@ add_func :: QueueOfFunc -> DescriptorFunc -> QueueOfFunc
 and then send the queue to
 ```haskell
 draw_window :: QueueOfFunc -> IO ()
-```.
+```
