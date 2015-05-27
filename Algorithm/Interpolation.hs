@@ -1,5 +1,6 @@
 module Algorithm.Interpolation (
-    interpolate_lagrange
+    interpolate_lagrange,
+    Point
 ) where
 
 import ExpressionParser.Operator.BinaryOperator
@@ -45,7 +46,6 @@ interpolate_lagrange [] = create_func "0"
 interpolate_lagrange points = sum s
     where
         noms = map product_diffs_nom tr_points
-        --denoms = map (create_func . show) $ zipWith (\ x y -> product_diffs_denom y x) tr_points fst_s
         denoms = create_denoms tr_points fst_s
         tr_points = tr_list_points fst_s 0 (length fst_s)
         fst_s = map fst points

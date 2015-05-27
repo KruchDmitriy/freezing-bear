@@ -1,5 +1,8 @@
 module Plot.Plot (
-    drawl
+    draw_sample,
+    add_func,
+    DescriptorFunc(DescriptorFunc),
+    draw_window
     ) where
 
 import Graphics.UI.GLUT
@@ -131,8 +134,8 @@ draw_axes a b c d (Size w h) = do
             dx = (b - a) / (fromIntegral w) * 5
             dy = (d - c) / (fromIntegral h) * 5
 
-drawl :: IO ()
-drawl = do
+draw_sample :: IO ()
+draw_sample = do
     let descr1 = DescriptorFunc (create_func "x^(0.5)") (-3) 10 0.01 (Color4 0 0 1 1)
         descr2 = DescriptorFunc (create_func "sin(x)") 0 10 0.01 (Color4 0 1 0 1)
         descr3 = DescriptorFunc (create_func "x - sin(x)") 0 10 0.01 (Color4 1 0 0 1)
