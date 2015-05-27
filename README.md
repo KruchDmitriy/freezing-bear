@@ -62,10 +62,10 @@ Another approach to solve the problem of parsing the string representation of fu
 This module separates in two submodules: `Integral` and `Interpolation`.
 
 **Integral** submodule allows to compute an integral of functions in range [a, b] with a fixed step by 2 methods: trapezy and Simpson's. The signatures of this functions are
-```trap_integral_step :: Function -> Double -> Double -> Step -> Area``` and
-```simpson_integral :: Function -> Double -> Double -> Step -> Area```.
+```haskell trap_integral_step :: Function -> Double -> Double -> Step -> Area``` and
+```haskell simpson_integral :: Function -> Double -> Double -> Step -> Area```.
 
-**Interpolation** submodule contains `interpolate_lagrange :: [Point] -> Function` method that implements Lagrange polynom interpolation by set of points `(x_i, y_i = f(x_i))`.
+**Interpolation** submodule contains `haskell interpolate_lagrange :: [Point] -> Function` method that implements Lagrange polynom interpolation by set of points `(x_i, y_i = f(x_i))`.
 
 ### Plot
 The module intends for plotting functions by own algorithm, based on `OpenGL` and `GLUT` library.
