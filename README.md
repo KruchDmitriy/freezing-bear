@@ -71,7 +71,7 @@ This module separates in two submodules: `Integral` and `Interpolation`.
 The module intends for plotting functions by own algorithm, based on `OpenGL` and `GLUT` library.
 The drawing function is represented by `DescriptorFunc` structure:
 
-```
+```haskell
 data DescriptorFunc = DescriptorFunc {
     f     :: Function,
     a     :: Double,
