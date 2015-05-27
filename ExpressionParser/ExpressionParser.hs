@@ -85,9 +85,11 @@ instance Num Term where
     x + y = BiTerm (fromJust $ create_bin_op '+') x y
     x - y = BiTerm (fromJust $ create_bin_op '-') x y
     x * y = BiTerm (fromJust $ create_bin_op '*') x y
+    fromInteger i = create_func $ show i
 
 instance Fractional Term where
     x / y = BiTerm (fromJust $ create_bin_op '/') x y
+    fromRational r = create_func $ show r
 
 type UnOp_n_Arg  = Maybe (Token, [Token])
 type BinOp_n_Arg = Maybe (Token, [Token], [Token])
