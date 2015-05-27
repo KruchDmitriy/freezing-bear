@@ -9,9 +9,9 @@ import Data.List
 import ExpressionParser.ExpressionParser
 
 type Step = Double
-type Square = Double
+type Area = Double
 
-trap_integral_count :: Function -> Double -> Double -> Int -> Square
+trap_integral_count :: Function -> Double -> Double -> Int -> Area
 trap_integral_count _ a b _ | a >= b = 0.0
 trap_integral_count _ _ _ 0 = 0.0
 trap_integral_count func a b n =
@@ -22,7 +22,7 @@ trap_integral_count func a b n =
         f = evaluate_func func (a + h)
         h = (b - a) / (fromIntegral n)
 
-trap_integral_step :: Function -> Double -> Double -> Step -> Square
+trap_integral_step :: Function -> Double -> Double -> Step -> Area
 trap_integral_step f a b h =
     sum * h' + (f' a + f' b) * h' / 2
     where
@@ -32,7 +32,7 @@ trap_integral_step f a b h =
         n   = ceiling $ (b - a) / h
         f'  = evaluate_func f
 
-simpson_integral :: Function -> Double -> Double -> Step -> Square
+simpson_integral :: Function -> Double -> Double -> Step -> Area
 simpson_integral f a b h =
     sum * h' * 2 / 3 + (f' a + f' b) * h' / 3
     where
