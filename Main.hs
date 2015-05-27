@@ -55,6 +55,7 @@ fst' = \ (x, y, z) -> x
 snd' = \ (x, y, z) -> y
 thd' = \ (x, y, z) -> z
 
+-- TODO: Wrap to functions
 main = do
     help
     action <- getLine
