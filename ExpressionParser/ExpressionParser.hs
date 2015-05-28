@@ -69,7 +69,13 @@ data Term = BiTerm BinaryOperator Term Term |
             UnTerm UnaryOperator  Term      |
             VarX | VarNumber Double |
             Error
-            deriving (Show, Eq)
+            deriving (Eq)
+
+instance Show Term where
+    show (BiTerm op left right) = "(" ++ show left ++ show op ++ show right ++ ")"
+    show (UnTerm func op) = show func ++ "(" ++ show op ++ ")"
+    show (VarX) = "x"
+    show (VarNumber d) = show d
 
 type Function = Term
 

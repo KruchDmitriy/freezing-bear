@@ -14,7 +14,14 @@ data UnaryOperator  =
         Tg  Prior |
         Lg  Prior |
         Exp Prior
-    deriving (Show, Eq)
+    deriving (Eq)
+
+instance Show UnaryOperator where
+    show (Sin _) = "sin"
+    show (Cos _) = "cos"
+    show (Tg  _) = "tg"
+    show (Lg  _) = "lg"
+    show (Exp _) = "exp"
 
 take_prior_un :: UnaryOperator -> Prior
 take_prior_un (Sin prior) = prior
