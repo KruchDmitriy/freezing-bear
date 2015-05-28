@@ -53,8 +53,6 @@ tokenizer (c:cs)
                     BinOp(fromJust $ create_bin_op '*') : UnOp(fromJust un_op) : (tokenizer $ snd $ func_tail (c:cs))
             (Just _)   -> UnOp (fromJust un_op) : (tokenizer $ snd $ func_tail (c:cs))
             Nothing    -> []
-        --if (un_op /= Nothing) then UnOp (fromJust un_op) : (tokenizer $ snd func_tail)
-        --else []
     | bin_op /= Nothing = BinOp (fromJust bin_op) : tokenizer cs
     | c == 'x'          = X : tokenizer cs
     | c == '('          = LeftBr : tokenizer cs
