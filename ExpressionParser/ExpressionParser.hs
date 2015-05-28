@@ -41,18 +41,26 @@ tokenizer "" = []
 tokenizer (c:cs)
     | c == ' '          = tokenizer cs
     | isDigit c         =
-        Number (read (fst num_tail) :: Double) : (tokenizer $ snd num_tail)
+        Number (read (fst $ num_tail (c:cs)) :: Double) : (tokenizer $ snd $ num_tail (c:cs))
     | isLetter c && (c /= 'x') =
-        if (un_op /= Nothing) then UnOp (fromJust un_op) : (tokenizer $ snd func_tail)
-        else []
+        case un_op of
+            (Just (E _)) -> 
+                if head cs == '-' then
+                    BinOp(fromJust $ create_bin_op '*') : UnOp(fromJust un_op) : 
+                        (LeftBr) : (Number 0.0) : BinOp(fromJust $ create_bin_op '-') : Number(read (fst $ num_tail (tail cs)) :: Double) : (RightBr) :
+                        (tokenizer $ snd $ num_tail (tail cs))
+                else 
+                    BinOp(fromJust $ create_bin_op '*') : UnOp(fromJust un_op) : (tokenizer $ snd $ func_tail (c:cs))
+            (Just _)   -> UnOp (fromJust un_op) : (tokenizer $ snd $ func_tail (c:cs))
+            Nothing    -> []
     | bin_op /= Nothing = BinOp (fromJust bin_op) : tokenizer cs
     | c == 'x'          = X : tokenizer cs
     | c == '('          = LeftBr : tokenizer cs
     | c == ')'          = RightBr : tokenizer cs
     | otherwise         = []
-    where num_tail  = takeWhile_r_tail (c:cs) (\x -> isDigit x || x == '.')
-          func_tail = takeWhile_r_tail (c:cs) isLetter
-          un_op = create_un_op (fst func_tail)
+    where num_tail str  = takeWhile_r_tail str (\x -> isDigit x || x == '.')
+          func_tail str = takeWhile_r_tail str isLetter
+          un_op = create_un_op (fst $ func_tail (c:cs))
           bin_op = create_bin_op c
 
 check_prior :: [Token] -> Int -> [Token]
@@ -69,7 +77,13 @@ data Term = BiTerm BinaryOperator Term Term |
             UnTerm UnaryOperator  Term      |
             VarX | VarNumber Double |
             Error
-            deriving (Show, Eq)
+            deriving (Eq)
+
+instance Show Term where
+    show (BiTerm op left right) = "(" ++ show left ++ show op ++ show right ++ ")"
+    show (UnTerm func op) = show func ++ "(" ++ show op ++ ")"
+    show (VarX) = "x"
+    show (VarNumber d) = show d
 
 type Function = Term
 

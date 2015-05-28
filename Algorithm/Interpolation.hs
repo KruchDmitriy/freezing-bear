@@ -43,7 +43,7 @@ create_denoms pss xs =
 
 change_negative :: Double -> String
 change_negative = 
-    (\ x -> if x > 0 then show x else "0" ++ (show x))
+    (\ x -> if x > 0 then show x else "(0" ++ (show x) ++ ")")
 
 interpolate_lagrange :: [Point] -> Function
 interpolate_lagrange [] = create_func "0"

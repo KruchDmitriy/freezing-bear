@@ -14,7 +14,14 @@ data BinaryOperator =
         Mult  Prior |
         Div   Prior |
         Pow   Prior
-    deriving (Show, Eq)
+    deriving (Eq)
+
+instance Show BinaryOperator where
+    show (Plus  _) = "+"
+    show (Minus _) = "-"
+    show (Mult  _) = "*"
+    show (Div   _) = "/"
+    show (Pow   _) = "^"
 
 take_prior_bin :: BinaryOperator -> Prior
 take_prior_bin (Plus  prior) = prior

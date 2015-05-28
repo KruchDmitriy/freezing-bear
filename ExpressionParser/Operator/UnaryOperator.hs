@@ -1,6 +1,6 @@
 module ExpressionParser.Operator.UnaryOperator
 (
-    UnaryOperator,
+    UnaryOperator(E),
     take_prior_un,
     create_un_op,
     inc_prior_un,
@@ -13,8 +13,17 @@ data UnaryOperator  =
         Cos Prior |
         Tg  Prior |
         Lg  Prior |
-        Exp Prior
-    deriving (Show, Eq)
+        Exp Prior |
+        E   Prior
+    deriving (Eq)
+
+instance Show UnaryOperator where
+    show (Sin _) = "sin"
+    show (Cos _) = "cos"
+    show (Tg  _) = "tg"
+    show (Lg  _) = "lg"
+    show (Exp _) = "exp"
+    show (E _)   = "10^"
 
 take_prior_un :: UnaryOperator -> Prior
 take_prior_un (Sin prior) = prior
@@ -22,6 +31,7 @@ take_prior_un (Cos prior) = prior
 take_prior_un (Tg  prior) = prior
 take_prior_un (Lg  prior) = prior
 take_prior_un (Exp prior) = prior
+take_prior_un (E prior)   = prior
 
 instance Ord UnaryOperator where
     x <= y = (take_prior_un x) <= (take_prior_un y)
@@ -33,6 +43,7 @@ create_un_op str
     | (str == "tg")  = Just (Tg  5)
     | (str == "lg")  = Just (Lg  5)
     | (str == "exp") = Just (Exp 5)
+    | (str == "e")   = Just (E   5)
     | otherwise      = Nothing
 
 inc_prior_un :: UnaryOperator -> Int -> UnaryOperator
@@ -41,6 +52,7 @@ inc_prior_un (Cos prior) delta = Cos (prior + delta)
 inc_prior_un (Tg  prior) delta = Tg  (prior + delta)
 inc_prior_un (Lg  prior) delta = Lg  (prior + delta)
 inc_prior_un (Exp prior) delta = Exp (prior + delta)
+inc_prior_un (E prior) delta   = E (prior + delta)
 
 eval_un :: UnaryOperator -> Double -> Double
 eval_un (Sin _) value = sin(value)
@@ -48,3 +60,4 @@ eval_un (Cos _) value = cos(value)
 eval_un (Tg  _) value = tan(value)
 eval_un (Lg  _) value = log(value)
 eval_un (Exp _) value = exp(value)
+eval_un (E _)   value = 10 ** value
